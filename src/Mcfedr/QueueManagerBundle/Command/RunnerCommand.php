@@ -88,7 +88,8 @@ abstract class RunnerCommand extends Command implements ContainerAwareInterface
         $this
             ->setDescription('Run a queue runner')
             ->addOption('limit', null, InputOption::VALUE_REQUIRED, 'Only run [limit] batches of jobs', 0)
-            ->addOption('process-isolation', null, InputOption::VALUE_NONE, 'New processes for each job');
+            ->addOption('process-isolation', null, InputOption::VALUE_NONE, 'New processes for each job')
+            ->addOption('process-timeout', null, InputOption::VALUE_REQUIRED, 'New processes timeout in seconds for each job');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -309,6 +310,10 @@ abstract class RunnerCommand extends Command implements ContainerAwareInterface
                 ->add('--limit=1')
                 ->add('--no-interaction')
                 ->add('--no-ansi');
+
+            if ($input->getOption('process-timeout')) {
+                $pb->setTimeout($input->getOption('process-timeout'));
+            }
 
             $skip = [
                 'limit',
